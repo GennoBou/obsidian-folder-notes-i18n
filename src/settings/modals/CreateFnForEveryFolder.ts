@@ -1,4 +1,5 @@
 import { Modal, Setting, TFolder, Notice, type App, type ButtonComponent } from 'obsidian';
+import { t } from '../../lang/helpers';
 import type FolderNotesPlugin from '../../main';
 import { createFolderNote, getFolderNote } from 'src/functions/folderNoteFunctions';
 import { getTemplatePlugins } from 'src/template';
@@ -33,22 +34,22 @@ export default class ConfirmationModal extends Modal {
 		}
 
 		const { contentEl } = this;
-		contentEl.createEl('h2', { text: 'Create folder note for every folder' });
+		contentEl.createEl('h2', { text: t('HEADER_CREATE_FOR_EVERY') });
 		const setting = new Setting(contentEl);
 		// eslint-disable-next-line max-len
-		setting.infoEl.createEl('p', { text: 'Make sure to backup your vault before using this feature.' }).style.color = '#fb464c';
+		setting.infoEl.createEl('p', { text: t('HEADER_BACKUP_VAULT') }).style.color = '#fb464c';
 		// eslint-disable-next-line max-len
-		setting.infoEl.createEl('p', { text: 'This feature will create a folder note for every folder in your vault.' });
+		setting.infoEl.createEl('p', { text: t('INFO_CREATE_FOR_EVERY') });
 		// eslint-disable-next-line max-len
-		setting.infoEl.createEl('p', { text: 'Every folder that already has a folder note will be ignored.' });
-		setting.infoEl.createEl('p', { text: 'Every excluded folder will be ignored.' });
+		setting.infoEl.createEl('p', { text: t('INFO_ALREADY_HAS_NOTE_IGNORED') });
+		setting.infoEl.createEl('p', { text: t('INFO_EXCLUDED_IGNORED') });
 		if (
 			!this.plugin.settings.templatePath ||
 			this.plugin.settings.templatePath?.trim() === ''
 		) {
 			new Setting(contentEl)
-				.setName('Folder note file extension')
-				.setDesc('Choose the file extension for the folder notes.')
+				.setName(t('SETTING_EXTENSION_CHOICE'))
+				.setDesc(t('SETTING_EXTENSION_CHOICE_DESC'))
 				.addDropdown((cb) => {
 					this.plugin.settings.supportedFileTypes.forEach((extension) => {
 						cb.addOption('.' + extension, extension);
@@ -62,7 +63,7 @@ export default class ConfirmationModal extends Modal {
 		}
 		new Setting(contentEl)
 			.addButton((cb: ButtonComponent) => {
-				cb.setButtonText('Create');
+				cb.setButtonText(t('BUTTON_CREATE'));
 				cb.setCta();
 				cb.buttonEl.focus();
 				cb.onClick(async () => {
@@ -73,12 +74,12 @@ export default class ConfirmationModal extends Modal {
 						this.extension = '.' + this.plugin.settings.templatePath.split('.').pop();
 					}
 					if (this.extension === '.ask') {
-						return new Notice('Please choose a file extension');
+						return new Notice(t('NOTICE_CHOOSE_EXTENSION'));
 					}
 					this.close();
 					const folders = this.app.vault
 						.getAllLoadedFiles()
-						.filter((file) => file.parent instanceof TFolder);
+						.filter((file) => file instanceof TFolder);
 					for (const folder of folders) {
 						if (folder instanceof TFolder) {
 							const excludedFolder = getExcludedFolder(
@@ -94,7 +95,7 @@ export default class ConfirmationModal extends Modal {
 				});
 			})
 			.addButton((cb: ButtonComponent) => {
-				cb.setButtonText('Cancel');
+				cb.setButtonText(t('CANCEL'));
 				cb.onClick(async () => {
 					this.close();
 				});

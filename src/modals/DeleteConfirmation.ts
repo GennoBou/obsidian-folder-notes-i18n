@@ -1,4 +1,5 @@
 import { Modal, Platform, type App, type TFile } from 'obsidian';
+import { t } from '../lang/helpers';
 import type FolderNotesPlugin from '../main';
 import { deleteFolderNote } from 'src/functions/folderNoteFunctions';
 export default class DeleteConfirmationModal extends Modal {
@@ -15,20 +16,20 @@ export default class DeleteConfirmationModal extends Modal {
 		const { contentEl, plugin } = this;
 		const modalTitle = contentEl.createDiv({ cls: 'fn-modal-title' });
 		const modalContent = contentEl.createDiv({ cls: 'fn-modal-content' });
-		modalTitle.createEl('h2', { text: 'Delete folder note' });
+		modalTitle.createEl('h2', { text: t('MODAL_TITLE_DELETE_NOTE') });
 		// eslint-disable-next-line max-len
-		modalContent.createEl('p', { text: `Are you sure you want to delete the folder note '${this.file.name}' ?` });
+		modalContent.createEl('p', { text: t('MODAL_CONFIRM_DELETE_NOTE').replace('{{file}}', this.file.name) });
 		switch (plugin.settings.deleteFilesAction) {
 			case 'trash':
-				modalContent.createEl('p', { text: 'It will be moved to your system trash.' });
+				modalContent.createEl('p', { text: t('MODAL_TRASH_SYSTEM') });
 				break;
 			case 'obsidianTrash':
 				// eslint-disable-next-line max-len
-				modalContent.createEl('p', { text: 'It will be moved to your Obsidian trash, which is located in the ".trash" hidden folder in your vault.' });
+				modalContent.createEl('p', { text: t('MODAL_TRASH_OBSIDIAN') });
 				break;
 			case 'delete':
 				modalContent
-					.createEl('p', { text: 'It will be permanently deleted.' })
+					.createEl('p', { text: t('MODAL_DELETE_PERMANENT') })
 					.setCssStyles({ color: 'red' });
 				break;
 		}
@@ -38,9 +39,10 @@ export default class DeleteConfirmationModal extends Modal {
 		if (!Platform.isMobile) {
 			const checkbox = buttonContainer.createEl('label', { cls: 'mod-checkbox' });
 			checkbox.tabIndex = -1;
-			const input = checkbox.createEl('input', { type: 'checkbox' });
-			checkbox.appendText('Don\'t ask again');
-			input.addEventListener('change', (e) => {
+			checkbox.createEl('input', { type: 'checkbox' });
+			checkbox.appendText(t('BUTTON_DONT_ASK_AGAIN'));
+			const input = checkbox.querySelector('input');
+			input?.addEventListener('change', (e) => {
 				const target = e.target as HTMLInputElement;
 				if (target.checked) {
 					plugin.settings.showDeleteConfirmation = false;
@@ -51,7 +53,7 @@ export default class DeleteConfirmationModal extends Modal {
 			});
 		} else {
 			const confirmButton = buttonContainer.createEl('button', {
-				text: 'Delete and don\'t ask again',
+				text: t('BUTTON_DELETE_DONT_ASK_AGAIN'),
 				cls: 'mod-destructive',
 			});
 			confirmButton.addEventListener('click', async () => {
@@ -63,7 +65,7 @@ export default class DeleteConfirmationModal extends Modal {
 		}
 
 		const deleteButton = buttonContainer.createEl('button', {
-			text: 'Delete',
+			text: t('BUTTON_DELETE'),
 			cls: 'mod-warning',
 		});
 		deleteButton.addEventListener('click', async () => {
@@ -73,7 +75,7 @@ export default class DeleteConfirmationModal extends Modal {
 		deleteButton.focus();
 
 		const cancelButton = buttonContainer.createEl('button', {
-			text: 'Cancel',
+			text: t('CANCEL'),
 			cls: 'mod-cancel',
 		});
 		cancelButton.addEventListener('click', async () => {

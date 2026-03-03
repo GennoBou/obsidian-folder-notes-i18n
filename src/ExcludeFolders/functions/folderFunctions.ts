@@ -3,6 +3,7 @@ import { getFolderNameFromPathString, getFolderPathFromString } from '../../func
 import type { ExcludedFolder } from '../ExcludeFolder';
 import { ExcludePattern } from '../ExcludePattern';
 import { Platform, Setting } from 'obsidian';
+import { t } from '../../lang/helpers';
 import { FolderSuggest } from '../../suggesters/FolderSuggester';
 import type { SettingsTab } from '../../settings/SettingsTab';
 import ExcludedFolderSettings from '../modals/ExcludeFolderSettings';
@@ -237,7 +238,7 @@ export function addExcludeFolderListItem(
 		);
 		// @ts-expect-error Obsidian's public types don't include this property
 		cb.containerEl.addClass('fn-exclude-folder-path');
-		cb.setPlaceholder('Folder path');
+		cb.setPlaceholder(t('PLACEHOLDER_FOLDER_PATH'));
 		cb.setValue(excludedFolder.path || '');
 		cb.onChange((value) => {
 			if (value.startsWith('{regex}') || value.includes('*')) {
@@ -261,7 +262,7 @@ export function addExcludeFolderListItem(
 
 	setting.addButton((cb) => {
 		cb.setIcon('edit');
-		cb.setTooltip('Edit folder note');
+		cb.setTooltip(t('TOOLTIP_EDIT_FOLDER_NOTE'));
 		cb.onClick(() => {
 			new ExcludedFolderSettings(plugin.app, plugin, excludedFolder).open();
 		});
@@ -270,7 +271,7 @@ export function addExcludeFolderListItem(
 	if (Platform.isDesktop || Platform.isTablet) {
 		setting.addButton((cb) => {
 			cb.setIcon('up-chevron-glyph');
-			cb.setTooltip('Move up');
+			cb.setTooltip(t('TOOLTIP_MOVE_UP'));
 			cb.onClick(() => {
 				if (excludedFolder.position === 0) { return; }
 				excludedFolder.position -= 1;
@@ -292,7 +293,7 @@ export function addExcludeFolderListItem(
 
 		setting.addButton((cb) => {
 			cb.setIcon('down-chevron-glyph');
-			cb.setTooltip('Move down');
+			cb.setTooltip(t('TOOLTIP_MOVE_DOWN'));
 			cb.onClick(() => {
 				if (excludedFolder.position === plugin.settings.excludeFolders.length - 1) {
 					return;
@@ -319,7 +320,7 @@ export function addExcludeFolderListItem(
 
 	setting.addButton((cb) => {
 		cb.setIcon('trash-2');
-		cb.setTooltip('Delete excluded folder');
+		cb.setTooltip(t('TOOLTIP_DELETE_EXCLUDED'));
 		cb.onClick(() => {
 			deleteExcludedFolder(plugin, excludedFolder);
 			setting.clear();

@@ -1,4 +1,5 @@
 import { Modal, Setting, type App } from 'obsidian';
+import { t } from '../../lang/helpers';
 import type FolderNotesPlugin from '../../main';
 import type { WhitelistedPattern } from '../WhitelistPattern';
 
@@ -20,11 +21,11 @@ export default class WhitelistPatternSettings extends Modal {
 	display(): void {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.createEl('h2', { text: 'Whitelisted pattern settings' });
+		contentEl.createEl('h2', { text: t('MODAL_TITLE_WHITELISTED_PATTERN') });
 		new Setting(contentEl)
-			.setName('Enable folder name sync')
+			.setName(t('SETTING_ENABLE_SYNC'))
 			// eslint-disable-next-line max-len
-			.setDesc('Choose if the name of a folder note should be renamed when the folder name is changed')
+			.setDesc(t('SETTING_ENABLE_SYNC_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.pattern.enableSync)
@@ -35,7 +36,7 @@ export default class WhitelistPatternSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Allow auto creation of folder notes in this folder')
+			.setName(t('SETTING_ALLOW_AUTO_CREATE'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.pattern.enableAutoCreate)
@@ -46,8 +47,8 @@ export default class WhitelistPatternSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Show folder in folder overview')
-			.setDesc('Choose if the folder should be shown in the folder overview')
+			.setName(t('SETTINGS_TAB_FOLDER_OVERVIEW'))
+			.setDesc(t('SETTING_DONT_SHOW_OVERVIEW_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.pattern.showInFolderOverview)
@@ -59,8 +60,8 @@ export default class WhitelistPatternSettings extends Modal {
 
 
 		new Setting(contentEl)
-			.setName('Open folder note when clicking on the folder')
-			.setDesc('Choose if the folder note should be opened when you click on the folder')
+			.setName(t('SETTING_OPEN_ON_CLICK'))
+			.setDesc(t('SETTING_OPEN_ON_CLICK_PATTERN_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.pattern.enableFolderNote)
@@ -73,8 +74,8 @@ export default class WhitelistPatternSettings extends Modal {
 
 		if (this.pattern.enableFolderNote) {
 			new Setting(contentEl)
-				.setName('Don\'t collapse folder when opening folder note')
-				.setDesc('Choose if the folder should be collapsed when the folder note is opened')
+				.setName(t('SETTING_DONT_COLLAPSE'))
+				.setDesc(t('SETTING_DONT_COLLAPSE_DESC'))
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.pattern.disableCollapsing)

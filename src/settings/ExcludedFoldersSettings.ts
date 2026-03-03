@@ -5,6 +5,7 @@ import {
 import { ExcludedFolder } from 'src/ExcludeFolders/ExcludeFolder';
 import { addExcludePatternListItem } from 'src/ExcludeFolders/functions/patternFunctions';
 import { Setting } from 'obsidian';
+import { t } from '../lang/helpers';
 import type { SettingsTab } from './SettingsTab';
 import ExcludedFolderSettings from 'src/ExcludeFolders/modals/ExcludeFolderSettings';
 import PatternSettings from 'src/ExcludeFolders/modals/PatternSettings';
@@ -16,32 +17,30 @@ export async function renderExcludeFolders(settingsTab: SettingsTab): Promise<vo
 	const manageExcluded = new Setting(containerEl)
 		.setHeading()
 		.setClass('fn-excluded-folder-heading')
-		.setName('Manage excluded folders');
+		.setName(t('HEADER_MANAGE_EXCLUDED'));
 	const desc3 = document.createDocumentFragment();
-	desc3.append(
-		'Add {regex} at the beginning of the folder name to use a regex pattern.',
-		desc3.createEl('br'),
-		'Use * before and after to exclude folders that include the name between the *s.',
-		desc3.createEl('br'),
-		'Use * before the folder name to exclude folders that end with the folder name.',
-		desc3.createEl('br'),
-		'Use * after the folder name to exclude folders that start with the folder name.',
-	);
+	const descParts = t('DESC_EXCLUDED_FOLDERS').split('<br>');
+	descParts.forEach((part, index) => {
+		desc3.append(part);
+		if (index < descParts.length - 1) {
+			desc3.createEl('br');
+		}
+	});
 	manageExcluded.setDesc(desc3);
 	// eslint-disable-next-line max-len
-	manageExcluded.infoEl.appendText('The regexes and wildcards are only for the folder name, not the path.');
+	manageExcluded.infoEl.appendText(t('INFO_REGEX_WILDCARDS'));
 	manageExcluded.infoEl.createEl('br');
 	// eslint-disable-next-line max-len
-	manageExcluded.infoEl.appendText('If you want to switch to a folder path delete the pattern first.');
+	manageExcluded.infoEl.appendText(t('INFO_SWITCH_PATH'));
 	// eslint-disable-next-line max-len
 	manageExcluded.infoEl.style.color = settingsTab.app.vault.getConfig('accentColor') as string || '#7d5bed';
 
 
 	new Setting(containerEl)
-		.setName('Whitelisted folders')
-		.setDesc('Folders that override the excluded folders/patterns')
+		.setName(t('SETTING_WHITELISTED_FOLDERS'))
+		.setDesc(t('SETTING_WHITELISTED_FOLDERS_DESC'))
 		.addButton((cb) => {
-			cb.setButtonText('Manage');
+			cb.setButtonText(t('BUTTON_MANAGE'));
 			cb.setCta();
 			cb.onClick(async () => {
 				new WhitelistedFoldersSettings(settingsTab).open();
@@ -49,9 +48,9 @@ export async function renderExcludeFolders(settingsTab: SettingsTab): Promise<vo
 		});
 
 	new Setting(containerEl)
-		.setName('Exclude folder default settings')
+		.setName(t('SETTING_EXCLUDE_FOLDER_DEFAULT'))
 		.addButton((cb) => {
-			cb.setButtonText('Manage');
+			cb.setButtonText(t('BUTTON_MANAGE'));
 			cb.setCta();
 			cb.onClick(async () => {
 				new ExcludedFolderSettings(
@@ -63,9 +62,9 @@ export async function renderExcludeFolders(settingsTab: SettingsTab): Promise<vo
 		});
 
 	new Setting(containerEl)
-		.setName('Exclude pattern default settings')
+		.setName(t('SETTING_EXCLUDE_PATTERN_DEFAULT'))
 		.addButton((cb) => {
-			cb.setButtonText('Manage');
+			cb.setButtonText(t('BUTTON_MANAGE'));
 			cb.setCta();
 			cb.onClick(async () => {
 				new PatternSettings(
@@ -78,12 +77,12 @@ export async function renderExcludeFolders(settingsTab: SettingsTab): Promise<vo
 
 
 	new Setting(containerEl)
-		.setName('Add excluded folder')
+		.setName(t('SETTING_ADD_EXCLUDED_FOLDER'))
 		.setClass('add-exclude-folder-item')
 		.addButton((cb) => {
 			cb.setIcon('plus');
 			cb.setClass('add-exclude-folder');
-			cb.setTooltip('Add excluded folder');
+			cb.setTooltip(t('TOOLTIP_ADD_EXCLUDED_FOLDER'));
 			cb.onClick(() => {
 				const excludedFolder = new ExcludedFolder(
 					'',

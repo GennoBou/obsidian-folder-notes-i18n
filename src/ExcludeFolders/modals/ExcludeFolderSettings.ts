@@ -1,4 +1,5 @@
 import { Modal, Setting, type App } from 'obsidian';
+import { t } from '../../lang/helpers';
 import type FolderNotesPlugin from '../../main';
 import type { ExcludedFolder } from 'src/ExcludeFolders/ExcludeFolder';
 import { updateCSSClassesForFolder } from 'src/functions/styleFunctions';
@@ -18,10 +19,10 @@ export default class ExcludedFolderSettings extends Modal {
 	display(): void {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.createEl('h2', { text: 'Excluded folder settings' });
+		contentEl.createEl('h2', { text: t('MODAL_TITLE_EXCLUDED_FOLDER') });
 		new Setting(contentEl)
-			.setName('Include subfolders')
-			.setDesc('Choose if the subfolders of the folder should also be excluded')
+			.setName(t('SETTING_INCLUDE_SUBFOLDERS'))
+			.setDesc(t('SETTING_INCLUDE_SUBFOLDERS_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.excludedFolder.subFolders)
@@ -32,8 +33,8 @@ export default class ExcludedFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Disable folder name sync')
-			.setDesc('Choose if the folder note should be renamed when the folder name is changed')
+			.setName(t('SETTING_DISABLE_SYNC'))
+			.setDesc(t('SETTING_DISABLE_SYNC_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.excludedFolder.disableSync)
@@ -44,8 +45,8 @@ export default class ExcludedFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Don\'t show folder in folder overview')
-			.setDesc('Choose if the folder should be shown in the folder overview')
+			.setName(t('SETTING_DONT_SHOW_OVERVIEW'))
+			.setDesc(t('SETTING_DONT_SHOW_OVERVIEW_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.excludedFolder.excludeFromFolderOverview)
@@ -56,8 +57,8 @@ export default class ExcludedFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Show folder note in the file explorer')
-			.setDesc('Choose if the folder note should be shown in the file explorer')
+			.setName(t('SETTING_SHOW_IN_EXPLORER'))
+			.setDesc(t('SETTING_SHOW_IN_EXPLORER_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.excludedFolder.showFolderNote)
@@ -70,8 +71,8 @@ export default class ExcludedFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Disable auto creation of folder notes in this folder')
-			.setDesc('Choose if a folder note should be created when a new folder is created')
+			.setName(t('SETTING_DISABLE_AUTO_CREATE'))
+			.setDesc(t('SETTING_DISABLE_AUTO_CREATE_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.excludedFolder.disableAutoCreate)
@@ -82,8 +83,8 @@ export default class ExcludedFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Disable open folder note')
-			.setDesc('Choose if the folder note should be opened when the folder is opened')
+			.setName(t('SETTING_DISABLE_OPEN_NOTE'))
+			.setDesc(t('SETTING_DISABLE_OPEN_NOTE_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.excludedFolder.disableFolderNote)
@@ -96,8 +97,8 @@ export default class ExcludedFolderSettings extends Modal {
 
 		if (!this.excludedFolder.disableFolderNote) {
 			new Setting(contentEl)
-				.setName('Collapse folder when opening folder note')
-				.setDesc('Choose if the folder should be collapsed when the folder note is opened')
+				.setName(t('SETTING_COLLAPSE_OPEN'))
+				.setDesc(t('SETTING_COLLAPSE_OPEN_DESC'))
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.excludedFolder.enableCollapsing)

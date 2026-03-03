@@ -1,4 +1,5 @@
 import { Modal, ButtonComponent } from 'obsidian';
+import { t } from '../../lang/helpers';
 import type FolderNotesPlugin from 'src/main';
 
 export default class BackupWarningModal extends Modal {
@@ -32,11 +33,11 @@ export default class BackupWarningModal extends Modal {
 		contentEl.createEl('p', { text: this.desc });
 
 		// eslint-disable-next-line max-len
-		contentEl.createEl('p', { text: 'Make sure to backup your vault before using this feature.' }).style.color = '#fb464c';
+		contentEl.createEl('p', { text: t('HEADER_BACKUP_VAULT') }).style.color = '#fb464c';
 
 		const buttonContainer = contentEl.createDiv({ cls: 'fn-modal-button-container' });
 		const confirmButton = new ButtonComponent(buttonContainer);
-		confirmButton.setButtonText('Confirm')
+		confirmButton.setButtonText(t('CONFIRM'))
 			.setCta()
 			.onClick(() => {
 				this.callback(...this.args);
@@ -44,7 +45,7 @@ export default class BackupWarningModal extends Modal {
 			});
 
 		const cancelButton = new ButtonComponent(buttonContainer);
-		cancelButton.setButtonText('Cancel')
+		cancelButton.setButtonText(t('CANCEL'))
 			.onClick(() => {
 				this.close();
 			});

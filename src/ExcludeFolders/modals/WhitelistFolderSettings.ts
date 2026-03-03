@@ -1,4 +1,5 @@
 import { Modal, Setting, type App } from 'obsidian';
+import { t } from '../../lang/helpers';
 import type FolderNotesPlugin from '../../main';
 import type { WhitelistedFolder } from '../WhitelistFolder';
 export default class WhitelistFolderSettings extends Modal {
@@ -19,10 +20,10 @@ export default class WhitelistFolderSettings extends Modal {
 	display(): void {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.createEl('h2', { text: 'Whitelisted folder settings' });
+		contentEl.createEl('h2', { text: t('MODAL_TITLE_WHITELISTED_FOLDER') });
 		new Setting(contentEl)
-			.setName('Include subfolders')
-			.setDesc('Choose if the subfolders of the folder should also be whitelisted')
+			.setName(t('SETTING_INCLUDE_SUBFOLDERS'))
+			.setDesc(t('SETTING_INCLUDE_SUBFOLDERS_WHITELIST_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.whitelistedFolder.subFolders)
@@ -33,9 +34,9 @@ export default class WhitelistFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Enable folder name sync')
+			.setName(t('SETTING_ENABLE_SYNC'))
 			// eslint-disable-next-line max-len
-			.setDesc('Choose if the name of a folder note should be renamed when the folder name is changed')
+			.setDesc(t('SETTING_ENABLE_SYNC_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.whitelistedFolder.enableSync)
@@ -46,8 +47,8 @@ export default class WhitelistFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Show folder in folder overview')
-			.setDesc('Choose if the folder should be shown in the folder overview')
+			.setName(t('SETTINGS_TAB_FOLDER_OVERVIEW'))
+			.setDesc(t('SETTING_DONT_SHOW_OVERVIEW_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.whitelistedFolder.showInFolderOverview)
@@ -58,8 +59,8 @@ export default class WhitelistFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Hide folder note in file explorer')
-			.setDesc('Choose if the folder note should be hidden in the file explorer')
+			.setName(t('SETTING_HIDE_IN_EXPLORER'))
+			.setDesc(t('SETTING_HIDE_IN_EXPLORER_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.whitelistedFolder.hideInFileExplorer)
@@ -70,7 +71,7 @@ export default class WhitelistFolderSettings extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName('Allow auto creation of folder notes in this folder')
+			.setName(t('SETTING_ALLOW_AUTO_CREATE'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.whitelistedFolder.enableAutoCreate)
@@ -82,8 +83,8 @@ export default class WhitelistFolderSettings extends Modal {
 
 
 		new Setting(contentEl)
-			.setName('Open folder note when clicking on the folder')
-			.setDesc('Choose if the folder note should be opened when the folder is opened')
+			.setName(t('SETTING_OPEN_ON_CLICK'))
+			.setDesc(t('SETTING_OPEN_ON_CLICK_DESC'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.whitelistedFolder.enableFolderNote)
@@ -96,8 +97,8 @@ export default class WhitelistFolderSettings extends Modal {
 
 		if (this.whitelistedFolder.enableFolderNote) {
 			new Setting(contentEl)
-				.setName('Don\'t collapse folder when opening folder note')
-				.setDesc('Choose if the folder should be collapsed when the folder note is opened')
+				.setName(t('SETTING_DONT_COLLAPSE'))
+				.setDesc(t('SETTING_DONT_COLLAPSE_DESC'))
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.whitelistedFolder.disableCollapsing)

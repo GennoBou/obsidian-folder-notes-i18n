@@ -3,6 +3,7 @@ import { getFolderNameFromPathString, getFolderPathFromString } from '../../func
 import type { WhitelistedFolder } from '../WhitelistFolder';
 import { WhitelistedPattern } from '../WhitelistPattern';
 import { Setting, ButtonComponent } from 'obsidian';
+import { t } from '../../lang/helpers';
 import { FolderSuggest } from '../../suggesters/FolderSuggester';
 import type { SettingsTab } from '../../settings/SettingsTab';
 import WhitelistFolderSettings from '../modals/WhitelistFolderSettings';
@@ -134,7 +135,7 @@ export function addWhitelistFolderListItem(
 		);
 		// @ts-expect-error Obsidian's public types don't include this property
 		cb.containerEl.addClass('fn-exclude-folder-path');
-		cb.setPlaceholder('Folder path');
+		cb.setPlaceholder(t('PLACEHOLDER_FOLDER_PATH'));
 		cb.setValue(whitelistedFolder.path);
 		cb.onChange((value) => {
 			if (value.startsWith('{regex}') || value.includes('*')) {
@@ -159,14 +160,14 @@ export function addWhitelistFolderListItem(
 
 	new ButtonComponent(buttonContainer)
 		.setIcon('edit')
-		.setTooltip('Edit folder note')
+		.setTooltip(t('TOOLTIP_EDIT_FOLDER_NOTE'))
 		.onClick(() => {
 			new WhitelistFolderSettings(plugin.app, plugin, whitelistedFolder).open();
 		});
 
 	new ButtonComponent(buttonContainer)
 		.setIcon('up-chevron-glyph')
-		.setTooltip('Move up')
+		.setTooltip(t('TOOLTIP_MOVE_UP'))
 		.onClick(() => {
 			if (whitelistedFolder.position === 0) { return; }
 			whitelistedFolder.position -= 1;
@@ -187,7 +188,7 @@ export function addWhitelistFolderListItem(
 
 	new ButtonComponent(buttonContainer)
 		.setIcon('down-chevron-glyph')
-		.setTooltip('Move down')
+		.setTooltip(t('TOOLTIP_MOVE_DOWN'))
 		.onClick(() => {
 			if (whitelistedFolder.position === plugin.settings.whitelistFolders.length - 1) {
 				return;
@@ -212,7 +213,7 @@ export function addWhitelistFolderListItem(
 
 	new ButtonComponent(buttonContainer)
 		.setIcon('trash-2')
-		.setTooltip('Delete excluded folder')
+		.setTooltip(t('TOOLTIP_DELETE_EXCLUDED'))
 		.onClick(() => {
 			void deleteWhitelistedFolder(plugin, whitelistedFolder);
 			setting.clear();

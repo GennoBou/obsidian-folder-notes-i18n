@@ -6,6 +6,7 @@ import {
 	parseYaml, Notice, Keymap,
 	requireApiVersion, Platform, debounce,
 } from 'obsidian';
+import { t } from './lang/helpers';
 import {
 	type FolderNotesSettings, DEFAULT_SETTINGS, SettingsTab,
 } from './settings/SettingsTab';
@@ -410,7 +411,7 @@ export default class FolderNotesPlugin extends Plugin {
 			}
 		} catch (e) {
 			// eslint-disable-next-line max-len
-			new Notice('Error creating folder overview (folder notes plugin) - check console for more details');
+			new Notice(t('ERROR_CREATING_OVERVIEW'));
 			console.error(e);
 		}
 	}

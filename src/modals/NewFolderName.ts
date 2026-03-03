@@ -1,4 +1,5 @@
 import { Modal, type App, type TFolder } from 'obsidian';
+import { t } from '../lang/helpers';
 import type FolderNotesPlugin from '../main';
 export default class NewFolderNameModal extends Modal {
 	plugin: FolderNotesPlugin;
@@ -24,13 +25,13 @@ export default class NewFolderNameModal extends Modal {
 		this.modalEl.classList.add('mod-file-rename');
 		const modalTitle = this.modalEl.querySelector('div.modal-title');
 		if (modalTitle) {
-			modalTitle.textContent = 'Folder title';
+			modalTitle.textContent = t('MODAL_TITLE_FOLDER_TITLE');
 		}
 
 		const textarea = contentEl.createEl('textarea', {
 			text: this.folder.name.replace(this.plugin.settings.folderNoteType, ''),
 			attr: {
-				placeholder: 'Enter the name of the folder',
+				placeholder: t('PLACEHOLDER_ENTER_FOLDER_NAME'),
 				rows: '1',
 				spellcheck: 'false',
 				class: 'rename-textarea',
@@ -44,14 +45,14 @@ export default class NewFolderNameModal extends Modal {
 		textarea.focus();
 
 		const buttonContainer = this.modalEl.createDiv({ cls: 'modal-button-container' });
-		const saveButton = buttonContainer.createEl('button', { text: 'Save', cls: 'mod-cta' });
+		const saveButton = buttonContainer.createEl('button', { text: t('BUTTON_SAVE'), cls: 'mod-cta' });
 		saveButton.addEventListener('click', async () => {
 			this.saveFolderName();
 			this.close();
 		});
 
 		const cancelButton = buttonContainer.createEl('button', {
-			text: 'Cancel',
+			text: t('CANCEL'),
 			cls: 'mod-cancel',
 		});
 		cancelButton.addEventListener('click', () => {

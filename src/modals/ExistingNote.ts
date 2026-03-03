@@ -7,6 +7,7 @@ import {
 	type TFolder,
 	type TAbstractFile,
 } from 'obsidian';
+import { t } from '../lang/helpers';
 import type FolderNotesPlugin from '../main';
 import { turnIntoFolderNote } from 'src/functions/folderNoteFunctions';
 export default class ExistingFolderNoteModal extends Modal {
@@ -31,10 +32,10 @@ export default class ExistingFolderNoteModal extends Modal {
 	}
 	onOpen(): void {
 		const { contentEl } = this;
-		contentEl.createEl('h2', { text: 'A folder note for this folder already exists' });
+		contentEl.createEl('h2', { text: t('MODAL_TITLE_NOTE_EXISTS') });
 		const setting = new Setting(contentEl);
 		// eslint-disable-next-line max-len
-		setting.infoEl.createEl('p', { text: 'Are you sure you want to turn the note into a folder note and rename the existing folder note?' });
+		setting.infoEl.createEl('p', { text: t('MODAL_CONFIRM_TURN_AND_RENAME') });
 
 		setting.infoEl.parentElement?.classList.add('fn-delete-confirmation-modal');
 
@@ -43,7 +44,7 @@ export default class ExistingFolderNoteModal extends Modal {
 		const buttonContainer = setting.infoEl.createEl('div', { cls: 'fn-delete-confirmation-modal-buttons' });
 		if (Platform.isMobileApp) {
 			const confirmButton = buttonContainer.createEl('button', {
-				text: 'Rename and don\'t ask again',
+				text: t('BUTTON_RENAME_DONT_ASK'),
 			});
 			confirmButton.classList.add('mod-warning', 'fn-confirmation-modal-button');
 			confirmButton.addEventListener('click', async () => {
@@ -62,12 +63,12 @@ export default class ExistingFolderNoteModal extends Modal {
 					this.plugin.settings.showRenameConfirmation = true;
 				}
 			});
-			const checkBoxText = buttonContainer.createEl('span', { text: 'Don\'t ask again' });
+			const checkBoxText = buttonContainer.createEl('span', { text: t('BUTTON_DONT_ASK_AGAIN') });
 			checkBoxText.addEventListener('click', () => {
 				checkbox.click();
 			});
 		}
-		const button = buttonContainer.createEl('button', { text: 'Rename' });
+		const button = buttonContainer.createEl('button', { text: t('BUTTON_RENAME') });
 		button.classList.add('mod-warning', 'fn-confirmation-modal-button');
 		button.addEventListener('click', async () => {
 			this.plugin.saveSettings();
@@ -75,7 +76,7 @@ export default class ExistingFolderNoteModal extends Modal {
 			turnIntoFolderNote(this.plugin, this.file, this.folder, this.folderNote, true);
 		});
 		button.focus();
-		const cancelButton = buttonContainer.createEl('button', { text: 'Cancel' });
+		const cancelButton = buttonContainer.createEl('button', { text: t('CANCEL') });
 		cancelButton.addEventListener('click', async () => {
 			this.close();
 		});

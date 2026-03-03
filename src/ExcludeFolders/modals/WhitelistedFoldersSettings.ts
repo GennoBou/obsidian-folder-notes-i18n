@@ -1,4 +1,5 @@
 import { Modal, Setting, type App } from 'obsidian';
+import { t } from '../../lang/helpers';
 import type { SettingsTab } from 'src/settings/SettingsTab';
 import type FolderNotesPlugin from '../../main';
 import { WhitelistedFolder } from '../WhitelistFolder';
@@ -22,15 +23,15 @@ export default class WhitelistedFoldersSettings extends Modal {
 	onOpen(): void {
 
 		const { contentEl } = this;
-		contentEl.createEl('h2', { text: 'Manage whitelisted folders' });
+		contentEl.createEl('h2', { text: t('MODAL_TITLE_MANAGE_WHITELISTED') });
 
 		new Setting(contentEl)
-			.setName('Add whitelisted folder')
+			.setName(t('SETTING_ADD_WHITELISTED'))
 			.setClass('add-exclude-folder-item')
 			.addButton((cb) => {
 				cb.setIcon('plus');
 				cb.setClass('add-exclude-folder');
-				cb.setTooltip('Add whitelisted folder');
+				cb.setTooltip(t('TOOLTIP_ADD_WHITELISTED'));
 				cb.onClick(() => {
 					const whitelistedFolder = new WhitelistedFolder(
 						'', this.plugin.settings.whitelistFolders.length,

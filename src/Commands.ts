@@ -9,6 +9,7 @@ import {
 	type Editor,
 	type MarkdownView,
 } from 'obsidian';
+import { t } from './lang/helpers';
 import type FolderNotesPlugin from './main';
 import {
 	getFolderNote,
@@ -49,7 +50,7 @@ export class Commands {
 	regularCommands(): void {
 		this.plugin.addCommand({
 			id: 'turn-into-folder-note',
-			name: 'Use this file as the folder note for its parent folder',
+			name: t('COMMAND_TURN_INTO_FOLDER_NOTE'),
 			checkCallback: (checking: boolean) => {
 				const file = this.app.workspace.getActiveFile();
 				if (!(file instanceof TFile)) return false;
@@ -66,7 +67,7 @@ export class Commands {
 
 		this.plugin.addCommand({
 			id: 'create-folder-note',
-			name: 'Make a folder with this file as its folder note',
+			name: t('COMMAND_CREATE_FOLDER_WITH_NOTE'),
 			callback: async () => {
 				const file = this.app.workspace.getActiveFile();
 				if (!(file instanceof TFile)) return;
@@ -75,7 +76,7 @@ export class Commands {
 					newPath = file.basename;
 				}
 				if (this.plugin.app.vault.getAbstractFileByPath(newPath)) {
-					return new Notice('Folder already exists');
+					return new Notice(t('NOTICE_FOLDER_ALREADY_EXISTS'));
 				}
 				const automaticallyCreateFolderNote =
 					this.plugin.settings.autoCreate;
@@ -92,7 +93,7 @@ export class Commands {
 
 		this.plugin.addCommand({
 			id: 'create-folder-note-for-current-folder',
-			name: 'Create markdown folder note for this folder',
+			name: t('COMMAND_CREATE_MD_NOTE_CURRENT'),
 			checkCallback: (checking) => {
 				const file = this.app.workspace.getActiveFile();
 				if (!(file instanceof TFile)) return false;
@@ -108,7 +109,7 @@ export class Commands {
 			if (fileType === 'md') return;
 			this.plugin.addCommand({
 				id: `create-${fileType}-folder-note-for-current-folder`,
-				name: `Create ${fileType} folder note for this folder`,
+				name: t('COMMAND_CREATE_TYPE_NOTE_CURRENT').replace('{{type}}', fileType),
 				checkCallback: (checking) => {
 					const file = this.app.workspace.getActiveFile();
 					if (!(file instanceof TFile)) return false;
@@ -124,7 +125,7 @@ export class Commands {
 			const type = fileType === 'md' ? 'markdown' : fileType;
 			this.plugin.addCommand({
 				id: `create-${type}-folder-note-for-active-file-explorer-folder`,
-				name: `Create ${type} folder note for current active folder in file explorer`,
+				name: t('COMMAND_CREATE_TYPE_NOTE_ACTIVE').replace('{{type}}', type),
 				checkCallback: (checking: boolean) => {
 					const folder = getFileExplorerActiveFolder();
 					if (!folder) return false;
@@ -143,7 +144,7 @@ export class Commands {
 
 		this.plugin.addCommand({
 			id: 'delete-folder-note-for-current-folder',
-			name: 'Delete this folder\'s linked note',
+			name: t('COMMAND_DELETE_LINKED_NOTE'),
 			checkCallback: (checking) => {
 				const file = this.app.workspace.getActiveFile();
 				if (!(file instanceof TFile)) return false;
@@ -158,7 +159,7 @@ export class Commands {
 
 		this.plugin.addCommand({
 			id: 'delete-folder-note-of-active-file-explorer-folder',
-			name: 'Delete folder note of current active folder in file explorer',
+			name: t('COMMAND_DELETE_LINKED_NOTE_ACTIVE'),
 			checkCallback: (checking: boolean) => {
 				const folder = getFileExplorerActiveFolder();
 				if (!folder) return false;
@@ -173,7 +174,7 @@ export class Commands {
 		});
 		this.plugin.addCommand({
 			id: 'open-folder-note-for-current-folder',
-			name: 'Open this folder\'s linked note',
+			name: t('COMMAND_OPEN_LINKED_NOTE'),
 			checkCallback: (checking) => {
 				const file = this.app.workspace.getActiveFile();
 				if (!(file instanceof TFile)) return false;
@@ -187,7 +188,7 @@ export class Commands {
 		});
 		this.plugin.addCommand({
 			id: 'open-folder-note-of-active-file-explorer-folder',
-			name: 'Open folder note of current active folder in file explorer',
+			name: t('COMMAND_OPEN_LINKED_NOTE_ACTIVE'),
 			checkCallback: (checking: boolean) => {
 				const folder = getFileExplorerActiveFolder();
 				if (!folder) return false;
@@ -203,7 +204,7 @@ export class Commands {
 
 		this.plugin.addCommand({
 			id: 'create-folder-note-from-selected-text',
-			name: 'Create folder note from selection',
+			name: t('COMMAND_CREATE_FROM_SELECTION'),
 			editorCheckCallback: (checking: boolean, editor: Editor, view: MarkdownView) => {
 				const text = editor.getSelection().trim();
 				const { file } = view;
@@ -214,12 +215,12 @@ export class Commands {
 					for (const char of blacklist) {
 						if (text.includes(char)) {
 							// eslint-disable-next-line max-len
-							new Notice('File name cannot contain any of the following characters: * " \\ / < > : | ?');
+							new Notice(t('NOTICE_INVALID_CHARS'));
 							return false;
 						}
 					}
 					if (text.endsWith('.')) {
-						new Notice('File name cannot end with a dot');
+						new Notice(t('NOTICE_END_WITH_DOT'));
 						return;
 					}
 					let folder: TAbstractFile | null;
@@ -227,7 +228,7 @@ export class Commands {
 					if (folderPath === '') {
 						folder = this.plugin.app.vault.getAbstractFileByPath(text);
 						if (folder instanceof TFolder) {
-							new Notice('Folder note already exists');
+							new Notice(t('NOTICE_NOTE_ALREADY_EXISTS'));
 							return false;
 						}
 						this.plugin.app.vault.createFolder(text);
@@ -237,7 +238,7 @@ export class Commands {
 						const folderFullPath = folderPath + '/' + text;
 						folder = this.plugin.app.vault.getAbstractFileByPath(folderFullPath);
 						if (folder instanceof TFolder) {
-							new Notice('Folder note already exists');
+							new Notice(t('NOTICE_NOTE_ALREADY_EXISTS'));
 							return false;
 						}
 						if (this.plugin.settings.storageLocation === 'parentFolder') {
@@ -246,7 +247,7 @@ export class Commands {
 									folderPath + '/' + text + this.plugin.settings.folderNoteType,
 								)
 							) {
-								new Notice('File already exists');
+								new Notice(t('NOTICE_FILE_ALREADY_EXISTS'));
 								return false;
 							}
 						}
@@ -303,7 +304,7 @@ export class Commands {
 				const addFolderNoteActions = (folderMenu: Menu): void => {
 					if (file instanceof TFile) {
 						folderMenu.addItem((item) => {
-							item.setTitle('Create folder note');
+							item.setTitle(t('MENU_CREATE_FOLDER_NOTE'));
 							item.setIcon('edit');
 							item.onClick(async () => {
 								if (!folder) return;
@@ -312,7 +313,7 @@ export class Commands {
 									newPath = file.basename;
 								}
 								if (this.plugin.app.vault.getAbstractFileByPath(newPath)) {
-									return new Notice('Folder already exists');
+									return new Notice(t('NOTICE_FOLDER_ALREADY_EXISTS'));
 								}
 								const automaticallyCreateFolderNote =
 									this.plugin.settings.autoCreate;
@@ -342,7 +343,7 @@ export class Commands {
 						if (folder.path === '' || folder.path === '/') return;
 
 						folderMenu.addItem((item) => {
-							item.setTitle(`Turn into folder note for ${folder?.name}`);
+							item.setTitle(t('MENU_TURN_INTO_FOLDER_NOTE').replace('{{folder}}', folder?.name || ''));
 							item.setIcon('edit');
 							item.onClick(() => {
 								if (!folder || !(folder instanceof TFolder)) return;
@@ -358,21 +359,8 @@ export class Commands {
 					const detachedExcludedFolder = getDetachedFolder(this.plugin, file.path);
 
 					if (excludedFolder && !excludedFolder.hideInSettings) {
-						// I'm not sure if I'm ever going to add this because of the possibility that a folder got more than one excluded
-						// menu.addItem((item) => {
-						// 	item.setTitle('Manage excluded folder');
-						// 	item.setIcon('settings-2');
-						// 	item.onClick(() => {
-						//     if (excludedFolder instanceof ExcludedFolder) {
-						//       new ExcludedFolderSettings(this.plugin.app, this.plugin, excludedFolder).open();
-						//     } else if (excludedFolder instanceof ExcludePattern) {
-						//       new PatternSettings(this.plugin.app, this.plugin, excludedFolder).open();
-						//     }
-						//   });
-						// });
-
 						folderMenu.addItem((item) => {
-							item.setTitle('Remove folder from excluded folders');
+							item.setTitle(t('MENU_REMOVE_EXCLUDED'));
 							item.setIcon('trash');
 							item.onClick(() => {
 								this.plugin.settings.excludeFolders =
@@ -381,7 +369,7 @@ export class Commands {
 											(excluded.path !== file.path) || excluded.detached,
 									);
 								this.plugin.saveSettings(true);
-								new Notice('Successfully removed folder from excluded folders');
+								new Notice(t('NOTICE_REMOVED_FROM_EXCLUDED'));
 							});
 						});
 
@@ -390,7 +378,7 @@ export class Commands {
 
 					if (detachedExcludedFolder) {
 						folderMenu.addItem((item) => {
-							item.setTitle('Remove folder from detached folders');
+							item.setTitle(t('MENU_REMOVE_DETACHED'));
 							item.setIcon('trash');
 							item.onClick(() => {
 								deleteExcludedFolder(this.plugin, detachedExcludedFolder);
@@ -401,7 +389,7 @@ export class Commands {
 					if (detachedExcludedFolder) { return; }
 
 					folderMenu.addItem((item) => {
-						item.setTitle('Exclude folder from folder notes');
+						item.setTitle(t('MENU_EXCLUDE_FOLDER'));
 						item.setIcon('x-circle');
 						item.onClick(() => {
 							const newExcludedFolder = new ExcludedFolder(
@@ -412,7 +400,7 @@ export class Commands {
 							);
 							this.plugin.settings.excludeFolders.push(newExcludedFolder);
 							this.plugin.saveSettings(true);
-							new Notice('Successfully excluded folder from folder notes');
+							new Notice(t('NOTICE_EXCLUDED_SUCCESS'));
 						});
 					});
 
@@ -422,7 +410,7 @@ export class Commands {
 
 					if (folderNote instanceof TFile && !detachedExcludedFolder) {
 						folderMenu.addItem((item) => {
-							item.setTitle('Delete folder note');
+							item.setTitle(t('MENU_DELETE_FOLDER_NOTE'));
 							item.setIcon('trash');
 							item.onClick(() => {
 								deleteFolderNote(this.plugin, folderNote, true);
@@ -430,7 +418,7 @@ export class Commands {
 						});
 
 						folderMenu.addItem((item) => {
-							item.setTitle('Open folder note');
+							item.setTitle(t('MENU_OPEN_FOLDER_NOTE'));
 							item.setIcon('chevron-right-square');
 							item.onClick(() => {
 								openFolderNote(this.plugin, folderNote);
@@ -438,7 +426,7 @@ export class Commands {
 						});
 
 						folderMenu.addItem((item) => {
-							item.setTitle('Detach folder note');
+							item.setTitle(t('MENU_DETACH_FOLDER_NOTE'));
 							item.setIcon('unlink');
 							item.onClick(() => {
 								detachFolderNote(this.plugin, folderNote);
@@ -446,7 +434,7 @@ export class Commands {
 						});
 
 						folderMenu.addItem((item) => {
-							item.setTitle('Copy Obsidian URL');
+							item.setTitle(t('MENU_COPY_URL'));
 							item.setIcon('link');
 							item.onClick(() => {
 								this.app.copyObsidianUrl(folderNote);
@@ -456,7 +444,7 @@ export class Commands {
 						if (this.plugin.settings.hideFolderNote) {
 							if (excludedFolder?.showFolderNote) {
 								folderMenu.addItem((item) => {
-									item.setTitle('Hide folder note in explorer');
+									item.setTitle(t('MENU_HIDE_IN_EXPLORER'));
 									item.setIcon('eye-off');
 									item.onClick(() => {
 										hideFolderNoteInFileExplorer(file.path, this.plugin);
@@ -464,7 +452,7 @@ export class Commands {
 								});
 							} else {
 								folderMenu.addItem((item) => {
-									item.setTitle('Show folder note in explorer');
+									item.setTitle(t('MENU_SHOW_IN_EXPLORER'));
 									item.setIcon('eye');
 									item.onClick(() => {
 										showFolderNoteInFileExplorer(file.path, this.plugin);
@@ -474,7 +462,7 @@ export class Commands {
 						}
 					} else {
 						folderMenu.addItem((item) => {
-							item.setTitle('Create markdown folder note');
+							item.setTitle(t('MENU_CREATE_MD_NOTE'));
 							item.setIcon('edit');
 							item.onClick(() => {
 								createFolderNote(this.plugin, file.path, true, '.md');
@@ -484,7 +472,7 @@ export class Commands {
 						this.plugin.settings.supportedFileTypes.forEach((fileType) => {
 							if (fileType === 'md') return;
 							folderMenu.addItem((item) => {
-								item.setTitle(`Create ${fileType} folder note`);
+								item.setTitle(t('MENU_CREATE_TYPE_NOTE').replace('{{type}}', fileType));
 								item.setIcon('edit');
 								item.onClick(() => {
 									createFolderNote(this.plugin, file.path, true, '.' + fileType);
@@ -500,7 +488,7 @@ export class Commands {
 					this.plugin.settings.useSubmenus
 				) {
 					menu.addItem(async (item) => {
-						item.setTitle('Folder Note Commands').setIcon('folder-edit');
+						item.setTitle(t('MENU_FOLDER_NOTE_COMMANDS')).setIcon('folder-edit');
 						let subMenu: Menu = item.setSubmenu() as Menu;
 						addFolderNoteActions(subMenu);
 					});
@@ -516,7 +504,7 @@ export class Commands {
 			const text = editor.getSelection().trim();
 			if (!text || text.trim() === '') return;
 			menu.addItem((item) => {
-				item.setTitle('Create folder note')
+				item.setTitle(t('MENU_CREATE_FOLDER_NOTE'))
 					.setIcon('edit')
 					.onClick(() => {
 						const { file } = view;
@@ -525,12 +513,12 @@ export class Commands {
 						for (const char of blacklist) {
 							if (text.includes(char)) {
 								// eslint-disable-next-line max-len
-								new Notice('File name cannot contain any of the following characters: * " \\ / < > : | ?');
+								new Notice(t('NOTICE_INVALID_CHARS'));
 								return;
 							}
 						}
 						if (text.endsWith('.')) {
-							new Notice('File name cannot end with a dot');
+							new Notice(t('NOTICE_END_WITH_DOT'));
 							return;
 						}
 
@@ -541,7 +529,7 @@ export class Commands {
 						if (folderPath === '') {
 							folder = this.plugin.app.vault.getAbstractFileByPath(text);
 							if (folder instanceof TFolder) {
-								return new Notice('Folder note already exists');
+								return new Notice(t('NOTICE_NOTE_ALREADY_EXISTS'));
 							}
 							this.plugin.app.vault.createFolder(text);
 							createFolderNote(this.plugin, text, false);
@@ -551,7 +539,7 @@ export class Commands {
 								folderPath + '/' + text,
 							);
 							if (folder instanceof TFolder) {
-								return new Notice('Folder note already exists');
+								return new Notice(t('NOTICE_NOTE_ALREADY_EXISTS'));
 							}
 							if (this.plugin.settings.storageLocation === 'parentFolder') {
 								if (
@@ -562,7 +550,7 @@ export class Commands {
 										this.plugin.settings.folderNoteType,
 									)
 								) {
-									return new Notice('File already exists');
+									return new Notice(t('NOTICE_FILE_ALREADY_EXISTS'));
 								}
 							}
 							this.plugin.app.vault.createFolder(folderPath + '/' + text);

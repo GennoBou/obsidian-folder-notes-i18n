@@ -1,4 +1,5 @@
 import { Modal, Setting, Notice, type App, type SettingTab } from 'obsidian';
+import { t } from '../lang/helpers';
 import type FolderNotesPlugin from '../main';
 import type { ListComponent } from 'src/functions/ListComponent';
 
@@ -25,9 +26,9 @@ export default class AddSupportedFileModal extends Modal {
 				this.close();
 			}
 		});
-		contentEl.createEl('h2', { text: 'Extension name' });
+		contentEl.createEl('h2', { text: t('MODAL_TITLE_EXTENSION_NAME') });
 		new Setting(contentEl)
-			.setName('Enter the name of the extension (only the short form, e.g. "md")')
+			.setName(t('SETTING_EXTENSION_NAME'))
 			.addText((text) =>
 				text
 					.setValue('')
@@ -47,7 +48,7 @@ export default class AddSupportedFileModal extends Modal {
 			contentEl.empty();
 			this.settingsTab.display();
 		} else if (this.plugin.settings.supportedFileTypes.includes(this.name.toLowerCase())) {
-			new Notice('This extension is already supported');
+			new Notice(t('NOTICE_EXTENSION_ALREADY_SUPPORTED'));
 			return;
 		} else {
 			await this.list.addValue(this.name.toLowerCase());

@@ -2,6 +2,7 @@ import {
 	Notice, PluginSettingTab, TFile,
 	TFolder, type App, type MarkdownPostProcessorContext,
 } from 'obsidian';
+import { t } from '../lang/helpers';
 import type FolderNotesPlugin from '../main';
 import type { ExcludePattern } from 'src/ExcludeFolders/ExcludePattern';
 import type { ExcludedFolder } from 'src/ExcludeFolders/ExcludeFolder';
@@ -219,23 +220,23 @@ export class SettingsTab extends PluginSettingTab {
 	}
 	TABS = {
 		GENERAL: {
-			name: 'General',
+			name: t('SETTINGS_TAB_GENERAL'),
 			id: 'general',
 		},
 		FOLDER_OVERVIEW: {
-			name: 'Folder overview',
+			name: t('SETTINGS_TAB_FOLDER_OVERVIEW'),
 			id: 'folder_overview',
 		},
 		EXCLUDE_FOLDERS: {
-			name: 'Exclude folders',
+			name: t('SETTINGS_TAB_EXCLUDE_FOLDERS'),
 			id: 'exclude_folders',
 		},
 		FILE_EXPLORER: {
-			name: 'File explorer',
+			name: t('SETTINGS_TAB_FILE_EXPLORER'),
 			id: 'file_explorer',
 		},
 		PATH: {
-			name: 'Path',
+			name: t('SETTINGS_TAB_PATH'),
 			id: 'path',
 		},
 	};
@@ -319,7 +320,7 @@ export class SettingsTab extends PluginSettingTab {
 	}
 
 	renameFolderNotes(): void {
-		new Notice('Starting to update folder notes...');
+		new Notice(t('START_UPDATING_FOLDER_NOTES'));
 		const oldTemplate = this.plugin.settings.oldFolderNoteName ?? '{{folder_name}}';
 
 		for (const folder of this.app.vault.getAllLoadedFiles()) {
@@ -355,11 +356,11 @@ export class SettingsTab extends PluginSettingTab {
 
 		this.plugin.settings.oldFolderNoteName = this.plugin.settings.folderNoteName;
 		this.plugin.saveSettings();
-		new Notice('Finished updating folder notes');
+		new Notice(t('FINISHED_UPDATING_FOLDER_NOTES'));
 	}
 
 	switchStorageLocation(oldMethod: string): void {
-		new Notice('Starting to switch storage location...');
+		new Notice(t('START_SWITCHING_STORAGE_LOCATION'));
 		this.app.vault.getAllLoadedFiles().forEach((file) => {
 			if (file instanceof TFolder) {
 				const folderNote = getFolderNote(this.plugin, file.path, oldMethod);
@@ -383,7 +384,7 @@ export class SettingsTab extends PluginSettingTab {
 				}
 			}
 		});
-		new Notice('Finished switching storage location');
+		new Notice(t('FINISHED_SWITCHING_STORAGE_LOCATION'));
 	}
 
 	onClose(): void {
